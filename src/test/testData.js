@@ -282,7 +282,9 @@ const createTimeTable = (courses, venues) => {
         );
 
         const doesClassesHaveALevelInADepartmentHavingAClass = classes.find(
-          (el) => el.level === level && el.department.includes(...department)
+          (el) =>
+            el.level === level &&
+            el.department.some((arrEl) => department.includes(arrEl))
         );
 
         if (doesClassesHaveCourseName) return;
