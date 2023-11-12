@@ -10,8 +10,8 @@ import {
   times,
   transformTimeTable,
 } from "../../test/testData";
+import { makeCsvData } from "../../utils/utils";
 import NavBar from "../../Components/Nav/nav";
-
 const bodyWidth = outerWidth;
 
 const TableScreen = () => {
@@ -19,7 +19,36 @@ const TableScreen = () => {
   const [dataList, setDataList] = useState([]);
   const { courses, venues } = useCourses();
 
-  console.log(courses, venues);
+  const downloadAsCsv = (columns, data, filename) => {
+    const csvData = makeCsvData(columns, data);
+    const csvFile = new Blob([csvData], { type: "text/csv" });
+    const downloadLink = document.createElement("a");
+
+    downloadLink.display = "none";
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
+
+  const handleDownloadCsv = () => {
+    const columns = [
+      { accessor: (item) => item.day, name: "Day" },
+      { accessor: (item) => item[8], name: "8:00 - 9:00" },
+      { accessor: (item) => item[9], name: "9:00 - 10:00" },
+      { accessor: (item) => item[10], name: "10:00 - 11:00" },
+      { accessor: (item) => item[11], name: "11:00 - 12:00" },
+      { accessor: (item) => item[12], name: "12:00 - 13:00" },
+      { accessor: (item) => item[13], name: "13:00 - 14:00" },
+      { accessor: (item) => item[14], name: "14:00 - 15:00" },
+      { accessor: (item) => item[15], name: "15:00 - 16:00" },
+      { accessor: (item) => item[16], name: "16:00 - 17:00" },
+      { accessor: (item) => item[17], name: "17:00 - 18:00" },
+    ];
+
+    downloadAsCsv(columns, dataList, "table");
+  };
 
   useEffect(() => {
     const timetable = createTimeTable(courses, venues);
@@ -49,7 +78,7 @@ const TableScreen = () => {
 
   return (
     <>
-      <NavBar />
+      <NavBar handleDownloadCsv={handleDownloadCsv} />
       <Table
         data={dataList}
         autoHeight={true}
