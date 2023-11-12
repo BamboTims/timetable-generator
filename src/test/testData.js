@@ -342,7 +342,6 @@ const createTimeTable = (courses, venues) => {
 
 const transformTimeTable = (timetable, times, venues) => {
   let transformedTimeTable = [];
-  console.log(timetable);
 
   days.forEach((day) => {
     for (let i = 0; i < venues.length; i++) {
