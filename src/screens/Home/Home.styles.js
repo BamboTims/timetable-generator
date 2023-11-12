@@ -62,6 +62,7 @@ const Button = styled(Link)`
   &:focus {
     background-color: rgba(0, 0, 0, 0.4);
     border-color: #000;
+    text-decoration: none;
   }
 `;
 
