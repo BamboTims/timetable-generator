@@ -67,4 +67,10 @@ const TableListLink = styled(Link)`
   }
 `;
 
-export { ListHeading, TableLists, TableListItem, TableListLink };
+const NoTableText = styled.p`
+  font-size: 1.8rem;
+  font-family: "Tomorrow";
+  letter-spacing: 2px;
+`;
+
+export { ListHeading, TableLists, TableListItem, TableListLink, NoTableText };

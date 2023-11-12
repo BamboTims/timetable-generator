@@ -1,3 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
+
+const tableLocation = "@table";
+
 const escapeCsvCell = (cell) => {
   if (cell == null) {
     return "";
@@ -29,4 +33,28 @@ const makeCsvData = (columns, data) => {
   }, columns.map(({ name }) => escapeCsvCell(name)).join(",") + "\r\n");
 };
 
-export { makeCsvData };
+const getAllTables = () => {
+  const allTables = JSON.parse(localStorage.getItem(tableLocation));
+  return allTables ?? [];
+};
+
+const saveTable = (name, table) => {
+  const savedTables = JSON.parse(localStorage.getItem(tableLocation)) ?? [];
+  const id = uuidv4();
+
+  if (savedTables.find((el) => el.name === name))
+    return alert(`The ${name} table has already been saved`);
+
+  const allTables = [...savedTables, { name, id }];
+
+  localStorage.setItem(tableLocation, JSON.stringify(allTables));
+  localStorage.setItem(id, JSON.stringify(table));
+
+  alert(`${name} has been saved successfully`);
+};
+
+const getTable = (id) => {
+  return JSON.parse(localStorage.getItem(id));
+};
+
+export { makeCsvData, getAllTables, saveTable, getTable };

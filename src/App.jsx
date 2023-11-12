@@ -13,6 +13,7 @@ const App = () => {
           <Route exact path="/" Component={Home} />
           <Route exact path="/create" Component={FormScreen} />
           <Route exact path="/create/new" Component={TableScreen} />
+          <Route exact path="/table/:id" Component={TableScreen} />
           <Route exact path="/*" Component={PageNotFound} />
         </Routes>
       </BrowserRouter>
