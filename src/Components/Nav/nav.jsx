@@ -4,10 +4,11 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import SaveIcon from "@mui/icons-material/Save";
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
 import { useNavigate } from "react-router-dom";
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar({ handleDownloadCsv }) {
   const navigate = useNavigate();
 
   return (
@@ -22,14 +23,31 @@ export default function ButtonAppBar() {
             sx={{ mr: 2 }}
             onClick={() => navigate("/")}
           >
-            <HomeSharpIcon />
+            <HomeSharpIcon sx={{ fontSize: 18 }} />
           </IconButton>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{ flexGrow: 1, fontSize: 16, fontWeight: 600 }}
+          >
             Timetable
           </Typography>
-          <Button color="inherit">Export</Button>
-          <Button color="inherit">Login</Button>
-          <Button color="inherit">Login</Button>
+          <Button
+            onClick={handleDownloadCsv}
+            color="inherit"
+            size="large"
+            sx={{ fontSize: 13 }}
+          >
+            CSV
+          </Button>
+          <Button
+            color="inherit"
+            size="large"
+            sx={{ fontSize: 13, display: "flex", alignItems: "center" }}
+          >
+            Save
+            <SaveIcon sx={{ ml: 1 }} />
+          </Button>
         </Toolbar>
       </AppBar>
     </Box>
