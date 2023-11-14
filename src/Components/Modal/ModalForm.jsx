@@ -62,6 +62,9 @@ const ModalForm = ({ setMode }) => {
       department,
     };
     setCourses((state) => [...state, submission]);
+    setCourseError("");
+    setCourseName("");
+    setLecturerName("");
   };
 
   const addVenues = () => {
@@ -88,6 +91,7 @@ const ModalForm = ({ setMode }) => {
     const submission = formVenues;
     setVenues((state) => [...state, submission]);
     setFormVenues("");
+    setVenueError("");
   };
 
   return (
