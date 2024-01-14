@@ -350,15 +350,6 @@ const createTimeTable = (courses, venues) => {
 
         classes = [...classes, { ...course, venue: venues[i], time }];
 
-        // coursesCopy = coursesCopy.map((course) => {
-        //   if (course.courseName === courseName && course.level === level) {
-        //     return {
-        //       ...course,
-        //       remainingHours: remainingHours - 1,
-        //     };
-        //   } else return course;
-        // });
-
         coursesCopy = reduceCourseHours(
           coursesCopy,
           courseName,
