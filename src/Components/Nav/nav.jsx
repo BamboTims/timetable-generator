@@ -8,7 +8,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import HomeSharpIcon from "@mui/icons-material/HomeSharp";
 import { useNavigate } from "react-router-dom";
 
-export default function ButtonAppBar({ handleDownloadCsv }) {
+export default function ButtonAppBar({ handleDownloadCsv, handleOpen }) {
   const navigate = useNavigate();
 
   return (
@@ -33,6 +33,14 @@ export default function ButtonAppBar({ handleDownloadCsv }) {
             Timetable
           </Typography>
           <Button
+            color="inherit"
+            size="large"
+            sx={{ fontSize: 13 }}
+            onClick={() => navigate("/create")}
+          >
+            Edit
+          </Button>
+          <Button
             onClick={handleDownloadCsv}
             color="inherit"
             size="large"
@@ -41,6 +49,7 @@ export default function ButtonAppBar({ handleDownloadCsv }) {
             CSV
           </Button>
           <Button
+            onClick={handleOpen}
             color="inherit"
             size="large"
             sx={{ fontSize: 13, display: "flex", alignItems: "center" }}

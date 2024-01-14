@@ -35,7 +35,8 @@ const SubmitButton = styledC(Link)`
   display:block;
   padding:1rem 2rem;
   color:white;
-  background-color:#ef9b0f;
+  font-weight:600;
+  background-color:#177245;
   border-radius:5px;
   box-shadow:1px 1px 0px rgba(0,0,0,0.5);
   cursor:pointer;

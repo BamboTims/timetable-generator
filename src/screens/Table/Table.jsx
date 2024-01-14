@@ -10,14 +10,28 @@ import {
   times,
   transformTimeTable,
 } from "../../test/testData";
-import { makeCsvData } from "../../utils/utils";
+import { Box } from "@mui/material";
+import { getTable, makeCsvData, saveTable } from "../../utils/utils";
 import NavBar from "../../Components/Nav/nav";
+import ModalPortal from "../../Components/Modal/Modal";
+import { SubmitButton } from "../../Components/Modal/ModalForm.styles";
+import { FormInput } from "../../Components/FormInput/FormInput";
+import { useLocation, useParams } from "react-router-dom";
+
 const bodyWidth = outerWidth;
 
 const TableScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [dataList, setDataList] = useState([]);
-  const { courses, venues } = useCourses();
+  const { courses, venues, setCourses, setVenues } = useCourses();
+  const [open, setOpen] = useState(false);
+  const [tableName, setTableName] = useState("");
+
+  const { id } = useParams();
+  const location = useLocation();
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   const downloadAsCsv = (columns, data, filename) => {
     const csvData = makeCsvData(columns, data);
@@ -50,14 +64,28 @@ const TableScreen = () => {
     downloadAsCsv(columns, dataList, "table");
   };
 
+  const handleSave = () => {
+    saveTable(tableName, dataList, courses, venues);
+    handleClose();
+  };
+
   useEffect(() => {
+    if (!id) return;
+    const { table: timetable, courses, venues } = getTable(id);
+    setCourses(courses);
+    setVenues(venues);
+    setDataList(timetable);
+    setIsLoading(false);
+  }, [id]);
+
+  useEffect(() => {
+    if (location.pathname !== "/create/new") return;
     const timetable = createTimeTable(courses, venues);
     const transformedTimeTable = transformTimeTable(timetable, times, venues);
     const spannedTimeTable = spanTimeTableRows(transformedTimeTable);
-    console.log(spannedTimeTable);
     setDataList(spannedTimeTable);
     setIsLoading(false);
-  }, []);
+  }, [courses, venues, location.pathname]);
 
   if (isLoading) {
     return (
@@ -78,7 +106,7 @@ const TableScreen = () => {
 
   return (
     <>
-      <NavBar handleDownloadCsv={handleDownloadCsv} />
+      <NavBar handleDownloadCsv={handleDownloadCsv} handleOpen={handleOpen} />
       <Table
         data={dataList}
         autoHeight={true}
@@ -93,9 +121,10 @@ const TableScreen = () => {
           fullText
           fixed
           rowSpan={(rowData) => rowData.rowspan + 1}
+          onClick={() => alert("kk")}
         >
           <HeaderCell>Days</HeaderCell>
-          <Cell dataKey="day" />
+          <Cell dataKey="day" onClick={() => alert("kk")} />
         </Column>
 
         <Column width={0.15 * bodyWidth} verticalAlign="middle" fullText>
@@ -121,7 +150,7 @@ const TableScreen = () => {
         <Column
           width={0.15 * bodyWidth}
           verticalAlign="middle"
-          align="middle"
+          align="center"
           fullText
         >
           <HeaderCell>12:00 - 13:00</HeaderCell>
@@ -153,6 +182,17 @@ const TableScreen = () => {
           <Cell dataKey="17" />
         </Column>
       </Table>
+      <ModalPortal open={open} handleClose={handleClose}>
+        <Box width="80%" mb={1}>
+          <FormInput
+            value={tableName}
+            changeText={setTableName}
+            label="Table name"
+            placeholder="Enter table name"
+          />
+        </Box>
+        <SubmitButton onClick={handleSave}>Save</SubmitButton>
+      </ModalPortal>
     </>
   );
 };

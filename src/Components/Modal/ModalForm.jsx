@@ -12,14 +12,27 @@ import {
 } from "./ModalForm.styles";
 import { FormInput, MultiSelectFormInput } from "../FormInput/FormInput";
 import Stack from "@mui/material/Stack";
+import { useFormValues } from "../../Context/FormValues.context";
 
 const ModalForm = ({ setMode }) => {
-  const [courseName, setCourseName] = useState("");
-  const [lecturerName, setLecturerName] = useState("");
-  const [courseUnits, setCourseUnits] = useState("");
-  const [formVenues, setFormVenues] = useState("");
-  const [formLevel, setFormLevel] = useState("");
-  const [formDepartment, setFormDepartment] = useState([]);
+  const {
+    courseName,
+    lecturerName,
+    courseUnits,
+    formVenues,
+    formLevel,
+    formDepartment,
+    formDay,
+    formTime,
+    setCourseName,
+    setLecturerName,
+    setCourseUnits,
+    setFormVenues,
+    setFormLevel,
+    setFormDepartment,
+    setFormDay,
+    setFormTime,
+  } = useFormValues();
   const [courseError, setCourseError] = useState("");
   const [venueError, setVenueError] = useState("");
 
@@ -35,6 +48,14 @@ const ModalForm = ({ setMode }) => {
     ) {
       return setCourseError("All fields must be filled");
     }
+
+    if (courseUnits === 3 && formDay && formDay === "friday")
+      return setCourseError("How? Like How?");
+
+    if (courseUnits >= 2 && formTime && formTime === 12)
+      return setCourseError(
+        "Not a suitable time for class, break is just around the corner"
+      );
 
     const shouldNotContinue = courses.find(
       (el) =>
@@ -60,8 +81,13 @@ const ModalForm = ({ setMode }) => {
       courseUnits,
       level: formLevel,
       department,
+      formDay,
+      formTime,
     };
     setCourses((state) => [...state, submission]);
+    setCourseError("");
+    setCourseName("");
+    setLecturerName("");
   };
 
   const addVenues = () => {
@@ -88,6 +114,7 @@ const ModalForm = ({ setMode }) => {
     const submission = formVenues;
     setVenues((state) => [...state, submission]);
     setFormVenues("");
+    setVenueError("");
   };
 
   return (
@@ -118,6 +145,7 @@ const ModalForm = ({ setMode }) => {
           justifyContent="space-between"
           flexWrap="wrap"
           marginBottom={3}
+          gap={3}
         >
           <FormInput
             value={courseUnits}
@@ -142,6 +170,38 @@ const ModalForm = ({ setMode }) => {
               { value: 200, label: 200 },
               { value: 300, label: 300 },
               { value: 400, label: 400 },
+            ]}
+          />
+          <FormInput
+            value={formTime}
+            changeText={setFormTime}
+            label="Time selected"
+            placeholder="Select time for class"
+            select
+            options={[
+              { value: 8, label: "8:00" },
+              { value: 9, label: "9:00" },
+              { value: 10, label: "10:00" },
+              { value: 11, label: "11:00" },
+              { value: 12, label: "12:00" },
+              { value: 14, label: "14:00" },
+              { value: 15, label: "15:00" },
+              { value: 16, label: "16:00" },
+              { value: 17, label: "17:00" },
+            ]}
+          />
+          <FormInput
+            value={formDay}
+            changeText={setFormDay}
+            label="Day of the week"
+            placeholder="Select day for class"
+            select
+            options={[
+              { value: "monday", label: "Monday" },
+              { value: "tuesday", label: "Tuesday" },
+              { value: "wednesday", label: "Wednesday" },
+              { value: "thursday", label: "Thursday" },
+              { value: "friday", label: "Friday" },
             ]}
           />
           <MultiSelectFormInput

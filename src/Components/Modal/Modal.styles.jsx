@@ -40,7 +40,6 @@ const ModalContainer = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  overflow-y: scroll;
 `;
 
 const Modal = styled(BaseModal)`
