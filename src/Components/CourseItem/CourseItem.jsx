@@ -6,6 +6,7 @@ import Button from "@mui/joy/Button";
 import MenuList from "@mui/joy/MenuList";
 import MenuItem from "@mui/joy/MenuItem";
 import { useCourses } from "../../Context/Course.context";
+import { useFormValues } from "../../Context/FormValues.context";
 
 const StyledButton = styled(Button)`
   font-size: 1.4rem;
@@ -15,7 +16,7 @@ const StyledButton = styled(Button)`
 const StyledMenuItem = styled(MenuItem)`
   font-size: 1.2rem;
   font-weight: 300;
-  color: ${(props) => (props.remove ? "red" : "black")};
+  color: ${(props) => (props.remove ? "red" : props.edit ? "green" : "black")};
 `;
 
 const Popup = styled(Popper)({
@@ -24,6 +25,7 @@ const Popup = styled(Popper)({
 
 const CourseItem = ({ item, venues }) => {
   const { setCourses, setVenues } = useCourses();
+  const { setCourseName, setLecturerName } = useFormValues();
 
   const buttonRef = useRef(null);
   const [open, setOpen] = useState(false);
@@ -50,6 +52,13 @@ const CourseItem = ({ item, venues }) => {
     return setCourses((state) =>
       state.filter((el) => el?.courseName !== item?.courseName)
     );
+  };
+
+  const handleEdit = (item) => {
+    if (venues) return;
+
+    setCourseName(item?.courseName);
+    setLecturerName(item?.lecturerName);
   };
 
   return (
@@ -119,6 +128,9 @@ const CourseItem = ({ item, venues }) => {
             )}
             <StyledMenuItem remove onClick={removeItem}>
               Remove{" "}
+            </StyledMenuItem>
+            <StyledMenuItem edit onClick={() => handleEdit(item)}>
+              Edit{" "}
             </StyledMenuItem>
           </MenuList>
         </ClickAwayListener>

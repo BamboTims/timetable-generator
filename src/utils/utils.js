@@ -38,7 +38,7 @@ const getAllTables = () => {
   return allTables ?? [];
 };
 
-const saveTable = (name, table) => {
+const saveTable = (name, table, courses, venues) => {
   const savedTables = JSON.parse(localStorage.getItem(tableLocation)) ?? [];
   const id = uuidv4();
 
@@ -48,7 +48,7 @@ const saveTable = (name, table) => {
   const allTables = [...savedTables, { name, id }];
 
   localStorage.setItem(tableLocation, JSON.stringify(allTables));
-  localStorage.setItem(id, JSON.stringify(table));
+  localStorage.setItem(id, JSON.stringify({ table, courses, venues }));
 
   alert(`${name} has been saved successfully`);
 };

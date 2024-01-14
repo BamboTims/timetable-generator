@@ -231,6 +231,27 @@ export const courses = [
   },
 ];
 
+const customSort = (a, b) => {
+  if (a.formTime && a.formDay) {
+    return -1;
+  } else if (a.formTime || a.formDay) {
+    return b.formTime && b.formDay ? 1 : -1;
+  } else {
+    return 1;
+  }
+};
+
+const reduceCourseHours = (courses, courseName, level, remainingHours) => {
+  return courses.map((course) => {
+    if (course.courseName === courseName && course.level === level) {
+      return {
+        ...course,
+        remainingHours: remainingHours - 1,
+      };
+    } else return course;
+  });
+};
+
 export const times = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 export const days = ["monday", "tuesday", "wednesday", "thursday", "friday"];
 
@@ -243,12 +264,14 @@ const createTimeTable = (courses, venues) => {
     friday: [],
   };
 
-  let coursesCopy = courses.map((el) => {
-    return {
-      ...el,
-      remainingHours: el.courseUnits,
-    };
-  });
+  let coursesCopy = courses
+    .map((el) => {
+      return {
+        ...el,
+        remainingHours: el.courseUnits,
+      };
+    })
+    .sort(customSort);
 
   days.forEach((day) => {
     times.forEach((time) => {
@@ -270,8 +293,11 @@ const createTimeTable = (courses, venues) => {
           department,
           level,
           remainingHours,
+          formDay = null,
+          formTime = null,
           pushed = false,
           hadOn = "",
+          forcedCourse = false,
         } = course;
 
         const doesClassesHaveCourseName = classes.find(
@@ -311,15 +337,41 @@ const createTimeTable = (courses, venues) => {
         if (time === 12 && remainingHours === 2 && courseUnits === 2) return;
         if (time === 12 && remainingHours === 3 && courseUnits === 3) return;
 
+        if (
+          formDay &&
+          formTime &&
+          formDay !== day &&
+          formTime !== time &&
+          !forcedCourse
+        )
+          return;
+        if (formDay && formDay !== day && !forcedCourse) return;
+        if (formDay && formTime !== time && !forcedCourse) return;
+
         classes = [...classes, { ...course, venue: venues[i], time }];
 
+        // coursesCopy = coursesCopy.map((course) => {
+        //   if (course.courseName === courseName && course.level === level) {
+        //     return {
+        //       ...course,
+        //       remainingHours: remainingHours - 1,
+        //     };
+        //   } else return course;
+        // });
+
+        coursesCopy = reduceCourseHours(
+          coursesCopy,
+          courseName,
+          level,
+          remainingHours
+        );
+
         coursesCopy = coursesCopy.map((course) => {
-          if (course.courseName === courseName && course.level === level) {
-            return {
-              ...course,
-              remainingHours: remainingHours - 1,
-            };
-          } else return course;
+          if ((formDay || formTime) && courseName === course.courseName) {
+            return { ...course, forcedCourse: true };
+          } else {
+            return course;
+          }
         });
       });
 

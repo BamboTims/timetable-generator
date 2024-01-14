@@ -23,7 +23,7 @@ const bodyWidth = outerWidth;
 const TableScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [dataList, setDataList] = useState([]);
-  const { courses, venues } = useCourses();
+  const { courses, venues, setCourses, setVenues } = useCourses();
   const [open, setOpen] = useState(false);
   const [tableName, setTableName] = useState("");
 
@@ -65,14 +65,15 @@ const TableScreen = () => {
   };
 
   const handleSave = () => {
-    saveTable(tableName, dataList);
+    saveTable(tableName, dataList, courses, venues);
     handleClose();
   };
 
   useEffect(() => {
     if (!id) return;
-    const timetable = getTable(id);
-    console.log(timetable);
+    const { table: timetable, courses, venues } = getTable(id);
+    setCourses(courses);
+    setVenues(venues);
     setDataList(timetable);
     setIsLoading(false);
   }, [id]);
@@ -120,9 +121,10 @@ const TableScreen = () => {
           fullText
           fixed
           rowSpan={(rowData) => rowData.rowspan + 1}
+          onClick={() => alert("kk")}
         >
           <HeaderCell>Days</HeaderCell>
-          <Cell dataKey="day" />
+          <Cell dataKey="day" onClick={() => alert("kk")} />
         </Column>
 
         <Column width={0.15 * bodyWidth} verticalAlign="middle" fullText>

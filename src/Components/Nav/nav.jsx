@@ -33,6 +33,14 @@ export default function ButtonAppBar({ handleDownloadCsv, handleOpen }) {
             Timetable
           </Typography>
           <Button
+            color="inherit"
+            size="large"
+            sx={{ fontSize: 13 }}
+            onClick={() => navigate("/create")}
+          >
+            Edit
+          </Button>
+          <Button
             onClick={handleDownloadCsv}
             color="inherit"
             size="large"
